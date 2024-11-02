@@ -19,14 +19,13 @@ class NoteListViewModel (private val noteRepository: NoteRepository) : ViewModel
     private var notes:List<NoteOverview> = emptyList()
     var noteList by mutableStateOf(notes)
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            notes = noteRepository.getAll().map{n -> n.toNoteOverview()}
-            Log.v(TAG, "fetched ${notes.size} notes");
-            noteList = notes
-            Log.v(TAG, "fetched notelist ${noteList.size} notes");
-            }
-        }
+  /* init {
+        viewModelScope.launch(Dispatchers.IO) { fetchLatestNotesInt() }
+        } */
+
+    fun fetchLatestNotes(){
+        viewModelScope.launch(Dispatchers.IO) { fetchLatestNotesInt() }
+    }
 
     fun deleteNote(id: String){
         Log.v(TAG, "deleting note ${id}")
@@ -34,14 +33,17 @@ class NoteListViewModel (private val noteRepository: NoteRepository) : ViewModel
             val noteToDelete = noteRepository.get(id)
             if(null != noteToDelete){
                 noteRepository.remove(noteToDelete)
-                notes = noteRepository.getAll().map{n -> n.toNoteOverview()}
-                Log.v(TAG, "fetched ${notes.size} notes");
-                noteList = notes
-                Log.v(TAG, "fetched notelist ${noteList.size} notes");
-
+                fetchLatestNotesInt()
             } else {
-                Log.v(TAG, "Cannot delete. note ${id} not found")
+                Log.v(TAG, "Cannot delete. note $id not found")
             }
         }
+    }
+
+    fun fetchLatestNotesInt(){
+        notes = noteRepository.getAll().map{n -> n.toNoteOverview()}
+        Log.v(TAG, "fetched ${notes.size} notes");
+        noteList = notes
+        Log.v(TAG, "fetched note list ${noteList.size} notes");
     }
 }

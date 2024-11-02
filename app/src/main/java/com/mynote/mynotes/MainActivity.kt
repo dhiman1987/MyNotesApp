@@ -45,7 +45,9 @@ class MainActivity : FragmentActivity() {
                 ) {
                     NavHost(navController, startDestination = "home") {
                         composable("home") { HomeScreen(navController) }
-                        composable("list") { NoteListScreen(noteListViewModel, navController) }
+                        composable("list") {
+                            noteListViewModel.fetchLatestNotes()
+                            NoteListScreen(noteListViewModel, navController) }
                         composable("note/{noteId}") { backStackEntry ->
                             val noteId = backStackEntry.arguments?.getString("noteId")
                             if (null != noteId) {
