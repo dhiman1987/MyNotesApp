@@ -39,7 +39,7 @@ fun ShowViewer(
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.tertiary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 title = { Text(text = noteTitle) }
             )

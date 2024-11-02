@@ -2,18 +2,27 @@ package com.mynote.mynotes.ui.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,12 +32,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mynote.mynotes.TAG
 import com.mynote.mynotes.data.NoteOverview
 import com.mynote.mynotes.ui.note.list.NoteListViewModel
+import com.mynote.mynotes.ui.theme.MyNotesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -43,7 +54,7 @@ fun NoteListScreen(
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.tertiary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 title = {
                     Text("My Notes")
@@ -72,9 +83,14 @@ fun NoteListScreen(
             start = 0.dp,
             end = 0.dp,
             bottom = it.calculateBottomPadding(),
-            top = it.calculateTopPadding()
+            top = it.calculateTopPadding(),
         )) {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
                 items(noteListViewModel.noteList) { note ->
                     NoteItem(note,
                         onClick = {
@@ -95,14 +111,14 @@ fun NoteListScreen(
 fun NoteItem(note: NoteOverview, onClick: () -> Unit, onDelete: () -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp)
+            .padding(8.dp)
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(8.dp)
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row( modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp,4.dp),
             verticalAlignment = Alignment.CenterVertically){
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = note.title, style = MaterialTheme.typography.titleMedium)
@@ -112,10 +128,91 @@ fun NoteItem(note: NoteOverview, onClick: () -> Unit, onDelete: () -> Unit) {
                     color = Color.Gray
                 )
             }
-            Box(modifier = Modifier.padding(16.dp)){
-                Button( onClick = onDelete) { Text("Delete") }
+            Box(modifier = Modifier
+                .padding(16.dp)){
+                 Button(
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
+                        containerColor = MaterialTheme.colorScheme.secondary ),
+                    onClick = onDelete)
+                {
+                    Row(verticalAlignment = Alignment.CenterVertically)
+                    {
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete",
+                            modifier = Modifier.size(20.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Delete")}
+
+                 }
             }
         }
     }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun NoteItemPreview(modifier: Modifier = Modifier){
+
+    val noteList = listOf(
+        NoteOverview("11", "This is a note 1", "02 Nov 2024"),
+        NoteOverview("12", "This is a note 2", "03 Nov 2024"),
+        NoteOverview("13", "This is a note 3", "04 Nov 2024"),
+        NoteOverview("14", "This is a note 4", "05 Nov 2024"),
+        NoteOverview("15", "This is a note 5", "06 Nov 2024"),
+        NoteOverview("16", "This is a note 6", "07 Nov 2024")
+    )
+
+    MyNotesTheme(darkTheme = true) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                    title = {
+                        Text("My Notes")
+                    }
+                )
+            },
+            bottomBar = {
+                Button(
+                    onClick = {},
+                    modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                ) {
+                    Text(
+                        text = "New Note",
+                        modifier = modifier
+                    )
+
+                }
+            }
+        ) {
+            Box(modifier = Modifier.padding(
+                start = 0.dp,
+                end = 0.dp,
+                bottom = it.calculateBottomPadding(),
+                top = it.calculateTopPadding(),
+            )) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                ) {
+                    items(noteList) { note ->
+                        NoteItem(note,
+                            onClick = {},
+                            onDelete = {})
+                    }
+                }
+            }
+        }
+    }
+
 
 }
