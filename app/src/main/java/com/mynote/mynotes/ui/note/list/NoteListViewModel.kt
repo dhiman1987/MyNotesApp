@@ -11,19 +11,20 @@ import com.mynote.mynotes.db.NoteRepository
 import com.mynote.mynotes.db.toNoteOverview
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.format.DateTimeFormatter
 
 class NoteListViewModel (private val noteRepository: NoteRepository) : ViewModel() {
     private val TAG = "NoteListViewModel"
-    private val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
+    private var searchText = ""
     private var notes:List<NoteOverview> = emptyList()
     var noteList by mutableStateOf(notes)
 
-  /* init {
-        viewModelScope.launch(Dispatchers.IO) { fetchLatestNotesInt() }
-        } */
 
-    fun fetchLatestNotes(){
+    fun fetchLatestNotes(searchText: String?){
+        if(!searchText.isNullOrBlank()){
+            this.searchText = searchText
+        } else {
+            this.searchText = ""
+        }
         viewModelScope.launch(Dispatchers.IO) { fetchLatestNotesInt() }
     }
 
@@ -40,8 +41,16 @@ class NoteListViewModel (private val noteRepository: NoteRepository) : ViewModel
         }
     }
 
-    fun fetchLatestNotesInt(){
-        notes = noteRepository.getAll().map{n -> n.toNoteOverview()}
+    private fun fetchLatestNotesInt(){
+        Log.v(TAG, "searchText $searchText notes");
+        if(searchText.isNotBlank()){
+            Log.v(TAG, "searching notes with title  %${searchText}% ...")
+            notes = noteRepository.getAll("%${searchText}%").map{n -> n.toNoteOverview()}
+
+        } else {
+            Log.v(TAG, "searching all notes")
+            notes = noteRepository.getAll().map{n -> n.toNoteOverview()}
+        }
         Log.v(TAG, "fetched ${notes.size} notes");
         noteList = notes
         Log.v(TAG, "fetched note list ${noteList.size} notes");

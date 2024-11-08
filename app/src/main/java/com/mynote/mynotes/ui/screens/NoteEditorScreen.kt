@@ -41,6 +41,7 @@ fun ShowEditor(
             OutlinedTextField(
                 value = noteEditorViewModel.noteTitle.collectAsState().value,
                 onValueChange = { noteEditorViewModel.setNoteTitle(it) },
+                label = { Text("Note Title - not encrypted") },
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(5.dp)
@@ -48,6 +49,7 @@ fun ShowEditor(
             OutlinedTextField(
                 value = noteEditorViewModel.noteContent.collectAsState().value,
                 onValueChange = { noteEditorViewModel.setNoteContent(it) },
+                label = { Text("Note Content - encrypted ") },
                 modifier = modifier
                     .padding(5.dp)
                     .fillMaxSize()

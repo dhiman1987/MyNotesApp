@@ -36,17 +36,3 @@ fun NoteEntity.toNoteOverview(): NoteOverview {
         title=this.title,
         updatedOn = updatedOnDateTime.format(formatter))
 }
-
-fun NoteEntity.encrypt(): NoteEntity {
-    return  NoteEntity(this.id,
-        this.title,
-        this.content,
-        this.updatedOn)
-}
-
-fun NoteEntity.decrypt(): NoteEntity {
-    return  NoteEntity(this.id,
-        this.title,
-        this.content,
-        this.updatedOn)
-}

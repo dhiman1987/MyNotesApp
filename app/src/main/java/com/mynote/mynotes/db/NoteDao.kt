@@ -19,4 +19,7 @@ interface NoteDao {
 
     @Query("SELECT * from notes ORDER BY updatedOn DESC")
     fun getAllNotes(): List<NoteEntity>
+
+    @Query("SELECT * from notes WHERE UPPER(title) LIKE UPPER(:searchText) ORDER BY updatedOn DESC")
+    fun getAllNotes(searchText: String): List<NoteEntity>
 }

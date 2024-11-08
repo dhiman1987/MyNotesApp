@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mynote.mynotes.db.MyNotesDatabase
 import com.mynote.mynotes.db.NoteRepositoryImpl
 import com.mynote.mynotes.encryption.EncryptionUtils
+import com.mynote.mynotes.ui.note.home.HomeViewModel
 import com.mynote.mynotes.ui.note.list.NoteListViewModel
 import com.mynote.mynotes.ui.note.list.NoteListViewModelFactory
 import com.mynote.mynotes.ui.screens.HomeScreen
@@ -44,9 +45,10 @@ class MainActivity : FragmentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     NavHost(navController, startDestination = "home") {
-                        composable("home") { HomeScreen(navController) }
-                        composable("list") {
-                            noteListViewModel.fetchLatestNotes()
+                        composable("home") { HomeScreen(HomeViewModel(), navController) }
+                        composable("list/{searchText}"){backStackEntry ->
+                            val searchText = backStackEntry.arguments?.getString("searchText")
+                            noteListViewModel.fetchLatestNotes(searchText)
                             NoteListScreen(noteListViewModel, navController) }
                         composable("note/{noteId}") { backStackEntry ->
                             val noteId = backStackEntry.arguments?.getString("noteId")
