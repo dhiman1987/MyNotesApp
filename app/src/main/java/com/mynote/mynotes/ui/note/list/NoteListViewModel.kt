@@ -11,25 +11,34 @@ import com.mynote.mynotes.db.NoteRepository
 import com.mynote.mynotes.db.toNoteOverview
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
 
 class NoteListViewModel (private val noteRepository: NoteRepository) : ViewModel() {
     private val TAG = "NoteListViewModel"
     private var searchText = ""
+    private var fromDate:Long = LocalDateTime.now().minusMonths(1L).toEpochSecond(ZoneOffset.UTC)
+    private var toDate:Long = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
     private var notes:List<NoteOverview> = emptyList()
     var noteList by mutableStateOf(notes)
 
-
-    fun fetchLatestNotes(searchText: String?){
-        if(!searchText.isNullOrBlank()){
-            this.searchText = searchText
-        } else {
-            this.searchText = ""
+    fun searchNotes(searchText: String?, fromDate: LocalDate?, toDate: LocalDate? ){
+        Log.v(TAG, "Searching notes input  $searchText, fromDate $fromDate, toDate $toDate")
+        this.searchText = if (!searchText.isNullOrBlank()) searchText else ""
+        if(fromDate!=null){
+            this.fromDate = fromDate.atStartOfDay(ZoneOffset.UTC).toEpochSecond()
         }
-        viewModelScope.launch(Dispatchers.IO) { fetchLatestNotesInt() }
+        if(toDate!=null){
+            this.toDate = toDate.atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC)
+        }
+        Log.v(TAG, "Searching notes with  ${this.searchText}, fromDate ${this.fromDate}, toDate ${this.toDate}")
+        viewModelScope.launch(Dispatchers.IO) { fetchLatestNotesInt()}
     }
 
     fun deleteNote(id: String){
-        Log.v(TAG, "deleting note ${id}")
+        Log.v(TAG, "deleting note $id")
         viewModelScope.launch(Dispatchers.IO) {
             val noteToDelete = noteRepository.get(id)
             if(null != noteToDelete){
@@ -42,15 +51,18 @@ class NoteListViewModel (private val noteRepository: NoteRepository) : ViewModel
     }
 
     private fun fetchLatestNotesInt(){
-        Log.v(TAG, "searchText $searchText notes");
-        if(searchText.isNotBlank()){
-            Log.v(TAG, "searching notes with title  %${searchText}% ...")
-            notes = noteRepository.getAll("%${searchText}%").map{n -> n.toNoteOverview()}
-
+        Log.v(TAG, "searching notes with title  %${searchText}% " +
+                    "from date ${this.fromDate} to date ${this.toDate} ...")
+        if(searchText.isNotBlank()) {
+            notes = noteRepository
+                .searchNotes("%${searchText}%",this.fromDate, this.toDate)
+                .map{n -> n.toNoteOverview()}
         } else {
-            Log.v(TAG, "searching all notes")
-            notes = noteRepository.getAll().map{n -> n.toNoteOverview()}
+            notes = noteRepository
+                .searchNotes(this.fromDate, this.toDate)
+                .map{n -> n.toNoteOverview()}
         }
+
         Log.v(TAG, "fetched ${notes.size} notes");
         noteList = notes
         Log.v(TAG, "fetched note list ${noteList.size} notes");

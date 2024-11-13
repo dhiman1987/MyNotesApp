@@ -32,6 +32,9 @@ class NoteEditorViewModel(noteId: String, noteRepository: NoteRepository) : View
     init {
         viewModelScope.launch(Dispatchers.IO) {
             Log.v(TAG, "fetching note $noteId")
+            if(noteId.isBlank()){
+                setMode("edit")
+            }
             noteModel = NoteModel(noteId,noteRepository)
             Log.v(TAG, "fetched note with $noteId. ${noteModel.get().title} ${noteModel.get().content}")
             setNoteTitle(noteModel.get().title)

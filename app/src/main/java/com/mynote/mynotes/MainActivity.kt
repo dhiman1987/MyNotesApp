@@ -18,8 +18,8 @@ import com.mynote.mynotes.ui.note.home.HomeViewModel
 import com.mynote.mynotes.ui.note.list.NoteListViewModel
 import com.mynote.mynotes.ui.note.list.NoteListViewModelFactory
 import com.mynote.mynotes.ui.screens.HomeScreen
-import com.mynote.mynotes.ui.screens.NoteListScreen
 import com.mynote.mynotes.ui.screens.NoteScreen
+import com.mynote.mynotes.ui.screens.ViewNotesScreen
 import com.mynote.mynotes.ui.theme.MyNotesTheme
 
 val TAG = "MainActivity"
@@ -48,14 +48,14 @@ class MainActivity : FragmentActivity() {
                         composable("home") { HomeScreen(HomeViewModel(), navController) }
                         composable("list/{searchText}"){backStackEntry ->
                             val searchText = backStackEntry.arguments?.getString("searchText")
-                            noteListViewModel.fetchLatestNotes(searchText)
-                            NoteListScreen(noteListViewModel, navController) }
+                            noteListViewModel.searchNotes(searchText,null,null)
+                            ViewNotesScreen(noteListViewModel, navController) }
                         composable("note/{noteId}") { backStackEntry ->
                             val noteId = backStackEntry.arguments?.getString("noteId")
                             if (null != noteId) {
-                                NoteScreen(noteId,navController,noteRepository)
+                                NoteScreen(noteId,noteRepository)
                             } else {
-                                NoteScreen("",navController,noteRepository)
+                                NoteScreen("",noteRepository)
                             }
 
                         }

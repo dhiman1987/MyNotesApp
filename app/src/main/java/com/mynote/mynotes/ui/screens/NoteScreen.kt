@@ -20,7 +20,6 @@ val NoteScreenTag = "NoteViewerScreen"
 
 @Composable
 fun NoteScreen (noteId:String,
-                navController: NavController,
                 noteRepository: NoteRepository){
     val context = LocalContext.current
     val noteEditorViewModel: NoteEditorViewModel = viewModel(factory = NoteEditorViewModelFactory(noteRepository,noteId))

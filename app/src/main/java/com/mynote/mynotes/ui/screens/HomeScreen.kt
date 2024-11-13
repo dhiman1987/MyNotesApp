@@ -47,7 +47,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), navController: NavCon
     Column( modifier = Modifier .fillMaxSize()
         .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center ) {
+        verticalArrangement = Arrangement.Bottom ) {
 
         SvgImage()
         HomeTagLineText()
@@ -62,10 +62,10 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), navController: NavCon
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = false)
+@Preview(showBackground = true)
 @Composable
 fun HomePreview(){
-    MyNotesTheme(darkTheme = true) {
+    MyNotesTheme(darkTheme = false) {
         HomeScreen(
             navController = NavController(context = LocalContext.current),
             modifier = Modifier
@@ -109,9 +109,9 @@ fun HomeMainHeroText(){
 @Composable
 fun HomeCreateNewNoteButton(navController: NavController){
     Button(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(8.dp)
             .fillMaxWidth()
-            .height(60.dp),
+            .height(56.dp),
         colors = ButtonDefaults.buttonColors(
             contentColor = MaterialTheme.colorScheme.onPrimary,
             containerColor = MaterialTheme.colorScheme.primary ),
@@ -134,9 +134,9 @@ fun HomeCreateNewNoteButton(navController: NavController){
 @Composable
 fun HomeCreateListNotesButton(navController: NavController){
     Button(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(8.dp)
             .fillMaxWidth()
-            .height(60.dp),
+            .height(56.dp),
         colors = ButtonDefaults.buttonColors(
             contentColor = MaterialTheme.colorScheme.onSecondary,
             containerColor = MaterialTheme.colorScheme.secondary ),

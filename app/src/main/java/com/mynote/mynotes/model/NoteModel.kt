@@ -1,10 +1,14 @@
 package com.mynote.mynotes.model
 
+
 import com.mynote.mynotes.data.Note
 import com.mynote.mynotes.data.toNoteEntity
 import com.mynote.mynotes.db.NoteRepository
 import com.mynote.mynotes.db.toNote
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.TextStyle
+import java.util.Locale.ENGLISH
 import java.util.UUID
 
 class NoteModel(noteId: String, private val noteRepository: NoteRepository) {
@@ -12,10 +16,13 @@ class NoteModel(noteId: String, private val noteRepository: NoteRepository) {
     private var note: Note = initNote(noteId)
 
     private fun initNote(noteId: String): Note {
+        val date = LocalDate.now().dayOfMonth
         val defaultNote = Note(
             id = UUID.randomUUID().toString(),
-            title = "This is default Note",
-            content = "Lets get started....",
+            title = "${LocalDate.now().dayOfMonth} " +
+                    "${LocalDate.now().month.getDisplayName(TextStyle.SHORT, ENGLISH)} " +
+                    "note",
+            content = "",
             updatedOn = LocalDateTime.now())
         if(noteId.isBlank()){
             return defaultNote;

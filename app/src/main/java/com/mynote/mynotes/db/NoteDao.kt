@@ -22,4 +22,15 @@ interface NoteDao {
 
     @Query("SELECT * from notes WHERE UPPER(title) LIKE UPPER(:searchText) ORDER BY updatedOn DESC")
     fun getAllNotes(searchText: String): List<NoteEntity>
+
+    @Query("SELECT * from notes " +
+            "WHERE UPPER(title) LIKE UPPER(:searchText) " +
+            "AND UPDATEDON BETWEEN :fromDate AND :toDate " +
+            "ORDER BY updatedOn DESC")
+    fun searchNotes(searchText: String, fromDate: Long, toDate: Long): List<NoteEntity>
+
+    @Query("SELECT * from notes " +
+            "WHERE UPDATEDON BETWEEN :fromDate AND :toDate " +
+            "ORDER BY updatedOn DESC")
+    fun searchNotes(fromDate: Long, toDate: Long): List<NoteEntity>
 }
