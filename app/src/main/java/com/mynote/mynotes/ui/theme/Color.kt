@@ -2,17 +2,12 @@ package com.mynote.mynotes.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+//Green light
+val GreenPrimary = Color(0xFF8dd076)
+val GreenSecondary= Color(0xFFDFFDD7)
+val GreenLight= Color(0xFFEEFCE9)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-//Green and Grey
-val GreenPrimaryLight = Color(0xFFACEAB4)
-val GreenPrimaryDark = Color(0xFF4E6B52)
-val DarkGrey = Color(0xFF3D3D3D)
-val LightGrey = Color(0xFFE0E0E0)
-val LightGreySecondary = Color(0xFF757575)
+//Green dark
+val GreenPrimaryDark = Color(0xFF568048)
+val GreenSecondaryDark= Color(0xFF1B1E19)
+val GreenDark= Color(0xFF171A17)

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -41,7 +42,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -94,11 +94,13 @@ fun ViewNotesTopBar(onSearch: (String, LocalDate, LocalDate) -> Unit){
             onValueChange = { searchText = it },
             label = { Text("Search by note title") },
             colors = OutlinedTextFieldDefaults.colors(
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary,
                 cursorColor = MaterialTheme.colorScheme.onPrimary,
                 focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
                 focusedTextColor = MaterialTheme.colorScheme.onPrimary,
                 focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondary),
+                unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp),
@@ -123,7 +125,8 @@ fun ViewNotesTopBar(onSearch: (String, LocalDate, LocalDate) -> Unit){
                     Log.v("ViewNotes","dateFrom $dateFrom dateTo $dateTo")
                             onSearch(searchText,dateFrom,dateTo)
                           },
-                modifier = Modifier.align(Alignment.Bottom))
+                modifier = Modifier
+                    .align(Alignment.Bottom))
             { Icon(Icons.Filled.Search,
                 contentDescription = "Search",
                 modifier = Modifier.size(40.dp))
@@ -155,12 +158,15 @@ OutlinedTextField( value = inputText,
                     },
     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
     colors = OutlinedTextFieldDefaults.colors(
+        unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
         cursorColor = MaterialTheme.colorScheme.onPrimary,
         focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
         focusedTextColor = MaterialTheme.colorScheme.onPrimary,
         focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-        unfocusedBorderColor = MaterialTheme.colorScheme.onSecondary ),
-    label = { Text(label) },
+        unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary ),
+    label = { Text(text=label,
+        color = MaterialTheme.colorScheme.onPrimary
+    ) },
     modifier = Modifier.width(132.dp))
 }
 
@@ -208,13 +214,16 @@ fun ViewNotesBottomBar(navController: NavController){
             Log.v(TAG, "Create new note button clicked")
             navController.navigate("note/")
         },
+        shape = RoundedCornerShape(20),
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
-            .padding(5.dp)
+            .height(46.dp),
     ) {
         Text(
             text = "New Note",
-            modifier = Modifier
+            modifier = Modifier,
+            style = MaterialTheme.typography.titleMedium
         )
 
     }
@@ -272,11 +281,11 @@ fun NoteItemPreview(modifier: Modifier = Modifier){
         NoteOverview("12", "This is a note 2", "03 Nov 2024"),
         NoteOverview("13", "This is a note 3", "04 Nov 2024"),
         NoteOverview("14", "This is a note 4", "05 Nov 2024"),
-        NoteOverview("15", "This is a note 5", "06 Nov 2024"),
-        NoteOverview("16", "This is a note 6", "07 Nov 2024")
+     //   NoteOverview("15", "This is a note 5", "06 Nov 2024"),
+     //   NoteOverview("16", "This is a note 6", "07 Nov 2024")
     )
 
-    MyNotesTheme(darkTheme = false) {
+    MyNotesTheme(darkTheme = true) {
 
         val onSearch: (String, LocalDate, LocalDate) -> Unit = {
                 s: String, fd: LocalDate, td: LocalDate -> Log.v("preview","$s $fd $td")}

@@ -3,13 +3,17 @@ package com.mynote.mynotes.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -27,9 +31,15 @@ fun ShowEditor(
         bottomBar = {
             Button(
                 onClick = onSave,
-                modifier.fillMaxWidth().padding(5.dp)
+                modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .height(46.dp),
+                shape = RoundedCornerShape(20),
             ) {
-                Text(text = "Save", modifier = modifier)
+                Text(text = "Save",
+                    modifier = modifier,
+                    style = MaterialTheme.typography.titleMedium)
             }
         }
     ) {

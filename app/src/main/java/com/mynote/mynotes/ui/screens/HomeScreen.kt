@@ -1,5 +1,6 @@
 package com.mynote.mynotes.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +38,10 @@ import androidx.navigation.NavController
 import com.mynote.mynotes.ui.note.home.HomeViewModel
 import com.mynote.mynotes.ui.theme.MyNotesTheme
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.OutlinedButton
 import com.mynote.mynotes.R
 
 
@@ -109,9 +113,11 @@ fun HomeMainHeroText(){
 @Composable
 fun HomeCreateNewNoteButton(navController: NavController){
     Button(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
             .height(56.dp),
+        shape = RoundedCornerShape(20),
         colors = ButtonDefaults.buttonColors(
             contentColor = MaterialTheme.colorScheme.onPrimary,
             containerColor = MaterialTheme.colorScheme.primary ),
@@ -134,9 +140,12 @@ fun HomeCreateNewNoteButton(navController: NavController){
 @Composable
 fun HomeCreateListNotesButton(navController: NavController){
     Button(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
             .height(56.dp),
+        border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
+        shape = RoundedCornerShape(20),
         colors = ButtonDefaults.buttonColors(
             contentColor = MaterialTheme.colorScheme.onSecondary,
             containerColor = MaterialTheme.colorScheme.secondary ),
@@ -147,7 +156,7 @@ fun HomeCreateListNotesButton(navController: NavController){
             Icon(
                 Icons.Filled.List, contentDescription = "list notes",
                 modifier = Modifier.size(32.dp))
-            Spacer(modifier = Modifier.width(32.dp))
+            Spacer(modifier = Modifier.size(ButtonDefaults.IconSize))
             Text(text = "View your notes",
                 style = MaterialTheme.typography.titleLarge
             )
