@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Button
@@ -59,14 +60,14 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), navController: NavCon
         Spacer(Modifier.height(50.dp))
         HomeMainHeroText()
         Spacer(Modifier.height(50.dp))
-        HomeCreateNewNoteButton(navController)
         HomeCreateListNotesButton(navController)
+        HomeImportNotes(navController)
+        HomeCreateNewNoteButton(navController)
 
     }
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun HomePreview(){
@@ -111,6 +112,35 @@ fun HomeMainHeroText(){
             .padding(16.dp,5.dp,16.dp,16.dp) )
 }
 
+@Composable
+fun HomeImportNotes(navController: NavController){
+    Button(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .height(56.dp),
+        border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
+        shape = RoundedCornerShape(20),
+        colors = ButtonDefaults.buttonColors(
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+            containerColor = MaterialTheme.colorScheme.secondary ),
+        onClick = {navController.navigate("import")})
+    {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        )
+        {
+            Icon(
+                Icons.Filled.Add, contentDescription = "Import notes",
+                modifier = Modifier.size(32.dp))
+            Spacer(modifier = Modifier.width(20.dp))
+            Text(text = "Import notes",
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+
+    }
+}
 @Composable
 fun HomeCreateNewNoteButton(navController: NavController){
     Button(

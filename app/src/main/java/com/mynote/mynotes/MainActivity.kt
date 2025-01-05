@@ -1,6 +1,9 @@
 package com.mynote.mynotes
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +21,7 @@ import com.mynote.mynotes.ui.note.home.HomeViewModel
 import com.mynote.mynotes.ui.note.list.NoteListViewModel
 import com.mynote.mynotes.ui.note.list.NoteListViewModelFactory
 import com.mynote.mynotes.ui.screens.HomeScreen
+import com.mynote.mynotes.ui.screens.ImportNoteScreen
 import com.mynote.mynotes.ui.screens.NoteScreen
 import com.mynote.mynotes.ui.screens.ViewNotesScreen
 import com.mynote.mynotes.ui.theme.MyNotesTheme
@@ -46,6 +50,7 @@ class MainActivity : FragmentActivity() {
                 ) {
                     NavHost(navController, startDestination = "home") {
                         composable("home") { HomeScreen(HomeViewModel(), navController) }
+                        composable("import") { ImportNoteScreen(navController) }
                         composable("list/{searchText}"){backStackEntry ->
                             val searchText = backStackEntry.arguments?.getString("searchText")
                             noteListViewModel.searchNotes(searchText,null,null)
@@ -64,6 +69,21 @@ class MainActivity : FragmentActivity() {
             }
         }
     }
+@SuppressLint("MissingSuperCall")
+override fun onRequestPermissionsResult(requestCode: Int,
+                                        permissions:
+                                         Array<String>, grantResults: IntArray ) {
+    if (requestCode == REQUEST_CODE_READ_EXTERNAL_STORAGE) {
+        if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            Log.v("Main", "Permission granted")
+        } else {
+            Log.v("Main", "Permission rejected $requestCode")
+        }
+
+        }
+    }
+
+    companion object { const val REQUEST_CODE_READ_EXTERNAL_STORAGE = 0x01FF }
 }
 
 
