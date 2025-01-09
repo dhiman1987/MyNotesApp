@@ -50,7 +50,7 @@ class MainActivity : FragmentActivity() {
                 ) {
                     NavHost(navController, startDestination = "home") {
                         composable("home") { HomeScreen(HomeViewModel(), navController) }
-                        composable("import") { ImportNoteScreen(navController) }
+                        composable("import") { ImportNoteScreen(noteRepository) }
                         composable("list/{searchText}"){backStackEntry ->
                             val searchText = backStackEntry.arguments?.getString("searchText")
                             noteListViewModel.searchNotes(searchText,null,null)

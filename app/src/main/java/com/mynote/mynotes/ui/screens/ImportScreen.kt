@@ -2,6 +2,7 @@ package com.mynote.mynotes.ui.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -27,8 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,8 +35,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mynote.mynotes.data.NoteOverview
+import com.mynote.mynotes.db.NoteRepository
+import com.mynote.mynotes.ui.note.import.NoteImportViewModel
+import com.mynote.mynotes.ui.note.import.NoteImportViewModelFactory
 import com.mynote.mynotes.ui.screens.common.NoteList
 import com.mynote.mynotes.ui.theme.MyNotesTheme
 import java.io.InputStreamReader
@@ -48,21 +50,27 @@ private val TAG = "ImportNotes"
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ImportNoteScreen(navController: NavController){
-    ImportNote(navController = NavController(context = LocalContext.current))
+fun ImportNoteScreen(noteRepository: NoteRepository){
+    val noteImportViewModel: NoteImportViewModel = viewModel(factory = NoteImportViewModelFactory(noteRepository))
+    val deleteSelectedNote: (String) -> Unit = { id -> noteImportViewModel.deleteSelectedNote(id)}
+    val updateSelectedNotes: (List<NoteOverview>) -> Unit = { updatedList -> noteImportViewModel.updateSelectedNotes(updatedList)}
+    ImportNote(context = LocalContext.current,
+        noteImportViewModel.selectedNotes,
+        deleteSelectedNote = deleteSelectedNote,
+        updateSelectedNotes = updateSelectedNotes)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ImportNote(navController:NavController){
+fun ImportNote(context: Context,
+               selectedNotes:List<NoteOverview>,
+               deleteSelectedNote: (String) -> Unit,
+               updateSelectedNotes: (List<NoteOverview>) -> Unit
+               ){
+
     val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
 
-    val context = LocalContext.current
 
-    val selectedNotes = remember { mutableStateOf(emptyList<NoteOverview>()) }
-
-    val onDelete: (String) -> Unit = { id ->
-        selectedNotes.value = selectedNotes.value.filter { note -> note.id!=id }}
 
     val pickFileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
@@ -81,17 +89,20 @@ fun ImportNote(navController:NavController){
                     val noteOverview = NoteOverview(id=noteId!!, title=noteTitle,
                         updatedOn = LocalDateTime.now().format(formatter))
                     selectedNotesInt.add(noteOverview)
+                    Log.v(TAG, noteOverview.title)
                     reader.close()
                 }
-                selectedNotes.value = selectedNotesInt
+                Log.v(TAG, "selectedNotesInt size ${selectedNotesInt.size}")
+                updateSelectedNotes(selectedNotesInt)
+                Log.v(TAG, "selectedNotes size ${selectedNotes.size}")
             }
 
         }
     }
 
     val importNotes: () -> Unit = {
-        Log.v(TAG, "importing notes ${selectedNotes.value.size}")
-        selectedNotes.value.map { note -> {
+        Log.v(TAG, "importing notes ${selectedNotes.size}")
+        selectedNotes.map { note -> {
             Log.v(TAG, "${note.id} [${note.title}]")
         } }
     }
@@ -129,8 +140,8 @@ fun ImportNote(navController:NavController){
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                NoteList(selectedNotes.value,
-                    onDelete = onDelete,
+                NoteList(selectedNotes,
+                    onDelete = deleteSelectedNote,
                     onItemClick = {},
                     it = it)
             }
@@ -214,6 +225,11 @@ fun BrowseNotesButton(onClick:()-> Unit){
 @Preview
 fun ImportNotePreview(){
     MyNotesTheme(darkTheme = false) {
-        ImportNote(navController = NavController(context = LocalContext.current))
+        ImportNote(
+            context = LocalContext.current,
+            selectedNotes = emptyList(),
+            deleteSelectedNote = {},
+            updateSelectedNotes = {}
+        )
     }
 }
