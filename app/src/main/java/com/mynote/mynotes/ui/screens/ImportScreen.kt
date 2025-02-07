@@ -36,28 +36,32 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.mynote.mynotes.data.NoteOverview
 import com.mynote.mynotes.db.NoteRepository
+import com.mynote.mynotes.file.FileRepository
 import com.mynote.mynotes.ui.note.import.NoteImportViewModel
 import com.mynote.mynotes.ui.note.import.NoteImportViewModelFactory
 import com.mynote.mynotes.ui.screens.common.NoteList
 import com.mynote.mynotes.ui.theme.MyNotesTheme
-import java.io.InputStreamReader
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 private val TAG = "ImportNotes"
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ImportNoteScreen(noteRepository: NoteRepository){
-    val noteImportViewModel: NoteImportViewModel = viewModel(factory = NoteImportViewModelFactory(noteRepository))
+fun ImportNoteScreen(noteRepository: NoteRepository,
+                     fileRepository: FileRepository,
+                     navController: NavController){
+    val noteImportViewModel: NoteImportViewModel = viewModel(factory = NoteImportViewModelFactory(noteRepository,fileRepository,navController))
     val deleteSelectedNote: (String) -> Unit = { id -> noteImportViewModel.deleteSelectedNote(id)}
-    val updateSelectedNotes: (List<NoteOverview>) -> Unit = { updatedList -> noteImportViewModel.updateSelectedNotes(updatedList)}
+    val updateSelectedNotes: (List<Uri>) -> Unit = { filesToImport -> noteImportViewModel.updateSelectedNotes(filesToImport)}
+    val importNotes: () -> Unit = { noteImportViewModel.importNotes()}
     ImportNote(context = LocalContext.current,
         noteImportViewModel.selectedNotes,
         deleteSelectedNote = deleteSelectedNote,
-        updateSelectedNotes = updateSelectedNotes)
+        updateSelectedNotes = updateSelectedNotes,
+        importNotes = importNotes
+    )
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -65,46 +69,17 @@ fun ImportNoteScreen(noteRepository: NoteRepository){
 fun ImportNote(context: Context,
                selectedNotes:List<NoteOverview>,
                deleteSelectedNote: (String) -> Unit,
-               updateSelectedNotes: (List<NoteOverview>) -> Unit
+               updateSelectedNotes: (List<Uri>) -> Unit,
+               importNotes: () -> Unit
                ){
-
-    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
-
-
 
     val pickFileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
     ){ uris: List<Uri> ->
-        val selectedNotesInt = ArrayList<NoteOverview>()
-        uris.forEach { uri ->
-            if(uri.path!=null){
-                context.contentResolver.openInputStream(uri)?.let { inputStream ->
-                    val reader = InputStreamReader(inputStream)
-                    val noteId = uri.path
-                    var noteTitle = reader.readText()
-                    if(noteTitle.length>20){
-                        noteTitle = noteTitle.substring(0,20)
-                        noteTitle = noteTitle.substring(0,noteTitle.lastIndexOf(" "))
-                    }
-                    val noteOverview = NoteOverview(id=noteId!!, title=noteTitle,
-                        updatedOn = LocalDateTime.now().format(formatter))
-                    selectedNotesInt.add(noteOverview)
-                    Log.v(TAG, noteOverview.title)
-                    reader.close()
-                }
-                Log.v(TAG, "selectedNotesInt size ${selectedNotesInt.size}")
-                updateSelectedNotes(selectedNotesInt)
-                Log.v(TAG, "selectedNotes size ${selectedNotes.size}")
-            }
-
-        }
-    }
-
-    val importNotes: () -> Unit = {
-        Log.v(TAG, "importing notes ${selectedNotes.size}")
-        selectedNotes.map { note -> {
-            Log.v(TAG, "${note.id} [${note.title}]")
-        } }
+        //val biometricAuthHelper = BiometricAuthHelper(context as FragmentActivity) {
+            updateSelectedNotes(uris)
+       // }
+       // biometricAuthHelper.authenticate()
     }
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
@@ -229,7 +204,8 @@ fun ImportNotePreview(){
             context = LocalContext.current,
             selectedNotes = emptyList(),
             deleteSelectedNote = {},
-            updateSelectedNotes = {}
+            updateSelectedNotes = {},
+            importNotes = {}
         )
     }
 }

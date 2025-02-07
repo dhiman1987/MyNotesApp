@@ -2,6 +2,7 @@ package com.mynote.mynotes.ui.screens.common
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
@@ -29,11 +31,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalProvider
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.mynote.mynotes.TAG
 import com.mynote.mynotes.data.NoteOverview
+import com.mynote.mynotes.ui.theme.MyNotesTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -82,10 +87,14 @@ fun NoteItem(note: NoteOverview, onClick: () -> Unit, onDelete: () -> Unit) {
             .clickable { onClick() },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        var backgroundColor = MaterialTheme.colorScheme.surface
+        if(!note.strongEncryption){
+            backgroundColor = MaterialTheme.colorScheme.tertiary
+        }
         Row( modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
+            .background(backgroundColor)
             .fillMaxWidth()
-            .padding(16.dp,4.dp),
+            .padding(16.dp, 4.dp),
             verticalAlignment = Alignment.CenterVertically){
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = note.title, style = MaterialTheme.typography.titleMedium)
@@ -94,13 +103,22 @@ fun NoteItem(note: NoteOverview, onClick: () -> Unit, onDelete: () -> Unit) {
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
+                if(!note.strongEncryption){
+                    Text(
+                        text="Save once to strongly encrypt",
+                        fontSize = 10.sp,
+                        fontStyle = FontStyle.Italic,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(0.dp,10.dp)
+                    )
+                }
             }
             Box(modifier = Modifier
                 .padding(16.dp)){
                 Button(
                     colors = ButtonDefaults.buttonColors(
                         contentColor = MaterialTheme.colorScheme.onSecondary,
-                        containerColor = MaterialTheme.colorScheme.secondary ),
+                        containerColor = MaterialTheme.colorScheme.secondary),
                     onClick = onDelete)
                 {
                     Row(verticalAlignment = Alignment.CenterVertically)
@@ -115,6 +133,30 @@ fun NoteItem(note: NoteOverview, onClick: () -> Unit, onDelete: () -> Unit) {
                 }
             }
         }
+    }
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NoteListPreview(){
+
+    val noteList = listOf(
+        NoteOverview("11", "This is a note 1", true,"02 Nov 2024"),
+        NoteOverview("12", "This is a note 2", true,"03 Nov 2024"),
+        NoteOverview("13", "This is a note 3", false,"04 Nov 2024"),
+        NoteOverview("14", "This is a note 4", true,"05 Nov 2024"),
+        NoteOverview("15", "This is a note 5", true,"06 Nov 2024"),
+        NoteOverview("16", "This is a note 6", false,"07 Nov 2024")
+    )
+    val it = PaddingValues()
+    MyNotesTheme(darkTheme = true) {
+        NoteList(
+            noteList = noteList,
+            onDelete = { },
+            onItemClick = { },
+            it = it
+        )
     }
 
 }

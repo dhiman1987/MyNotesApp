@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -60,7 +59,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), navController: NavCon
         Spacer(Modifier.height(50.dp))
         HomeMainHeroText()
         Spacer(Modifier.height(50.dp))
-        HomeCreateListNotesButton(navController)
+        HomeListNotesButton(navController)
         HomeImportNotes(navController)
         HomeCreateNewNoteButton(navController)
 
@@ -169,7 +168,7 @@ fun HomeCreateNewNoteButton(navController: NavController){
 }
 
 @Composable
-fun HomeCreateListNotesButton(navController: NavController){
+fun HomeListNotesButton(navController: NavController){
     Button(
         modifier = Modifier
             .padding(8.dp)

@@ -14,6 +14,7 @@ data class NoteEntity(
     val id: String,
     val title: String,
     val content: String,
+    val strongEncryption: Boolean,
     val updatedOn: Long)
 
 fun NoteEntity.toNote(): Note {
@@ -24,6 +25,7 @@ fun NoteEntity.toNote(): Note {
         id=this.id,
         title=this.title,
         content=this.content,
+        strongEncryption=this.strongEncryption,
         updatedOn = updatedOnDateTime)
 }
 
@@ -34,5 +36,6 @@ fun NoteEntity.toNoteOverview(): NoteOverview {
     return NoteOverview(
         id=this.id,
         title=this.title,
+        strongEncryption=this.strongEncryption,
         updatedOn = updatedOnDateTime.format(formatter))
 }

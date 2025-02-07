@@ -36,11 +36,20 @@ class BiometricAuthHelper(
 
     fun authenticate(cipher: Cipher) {
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric login for my app")
-                .setSubtitle("Log in using your biometric credential")
+                .setTitle("Biometric login for strong authentication")
+                .setSubtitle("Provide biometric credential")
                 .setNegativeButtonText("Use account password")
                 .build()
 
             biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cipher))
+    }
+
+    fun authenticate() {
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for import ")
+            .setSubtitle("Provide biometric credential")
+            .setNegativeButtonText("Use account password")
+            .build()
+        biometricPrompt.authenticate(promptInfo)
     }
 }

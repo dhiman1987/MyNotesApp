@@ -194,10 +194,10 @@ fun ViewNotesBottomBar(navController: NavController){
 fun NoteItemPreview(modifier: Modifier = Modifier){
 
     val noteList = listOf(
-        NoteOverview("11", "This is a note 1", "02 Nov 2024"),
-        NoteOverview("12", "This is a note 2", "03 Nov 2024"),
-        NoteOverview("13", "This is a note 3", "04 Nov 2024"),
-        NoteOverview("14", "This is a note 4", "05 Nov 2024"),
+        NoteOverview("11", "This is a note 1", true,"02 Nov 2024"),
+        NoteOverview("12", "This is a note 2", true,"03 Nov 2024"),
+        NoteOverview("13", "This is a note 3", false,"04 Nov 2024"),
+        NoteOverview("14", "This is a note 4", true,"05 Nov 2024"),
      //   NoteOverview("15", "This is a note 5", "06 Nov 2024"),
      //   NoteOverview("16", "This is a note 6", "07 Nov 2024")
     )

@@ -16,13 +16,13 @@ class NoteModel(noteId: String, private val noteRepository: NoteRepository) {
     private var note: Note = initNote(noteId)
 
     private fun initNote(noteId: String): Note {
-        val date = LocalDate.now().dayOfMonth
         val defaultNote = Note(
             id = UUID.randomUUID().toString(),
             title = "${LocalDate.now().dayOfMonth} " +
                     "${LocalDate.now().month.getDisplayName(TextStyle.SHORT, ENGLISH)} " +
                     "note",
             content = "",
+            strongEncryption = true,
             updatedOn = LocalDateTime.now())
         if(noteId.isBlank()){
             return defaultNote;
@@ -35,12 +35,15 @@ class NoteModel(noteId: String, private val noteRepository: NoteRepository) {
         }
     }
 
-    fun save(title:String?, content: String?): Note {
+    fun save(title:String?, content: String?, strongEncryption: Boolean?): Note {
         if(title!=null){
             this.note = this.note.copy(title=title)
         }
         if(content!=null){
             this.note = this.note.copy(content=content)
+        }
+        if(strongEncryption!=null){
+            this.note = this.note.copy(strongEncryption = strongEncryption)
         }
         this.note = this.note.copy(updatedOn = LocalDateTime.now())
         noteRepository.save(note.toNoteEntity())
