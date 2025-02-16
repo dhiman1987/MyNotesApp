@@ -1,5 +1,6 @@
 package com.mynote.mynotes.ui.note.editor
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
