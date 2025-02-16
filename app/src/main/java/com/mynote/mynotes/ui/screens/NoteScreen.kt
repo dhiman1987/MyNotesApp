@@ -1,6 +1,7 @@
 package com.mynote.mynotes.ui.screens
 
 import android.content.Context
+import android.content.Intent
 import android.util.Base64
 import android.util.Log
 import androidx.compose.runtime.Composable
@@ -33,6 +34,13 @@ fun NoteScreen (noteId:String,
                 onEdit = {
                     Log.v(NOTE_SCREEN_TAG, "`Edit` button clicked")
                     noteEditorViewModel.setMode("edit")
+                },
+                onShare = {
+                    shareNote(context,"""
+ ${noteEditorViewModel.noteTitle.value}
+ 
+ ${noteEditorViewModel.noteContent.value}
+                    """.trimIndent())
                 })
         }
         "edit" -> {
@@ -92,4 +100,14 @@ private fun decryptContent(noteEditorViewModel: NoteEditorViewModel, context: Co
 
         }
 
+}
+
+private fun shareNote(context: Context, noteText: String){
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, noteText)
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    context.startActivity(shareIntent)
 }
