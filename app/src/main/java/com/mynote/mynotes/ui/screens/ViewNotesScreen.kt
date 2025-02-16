@@ -2,6 +2,7 @@ package com.mynote.mynotes.ui.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +57,12 @@ fun ViewNotesScreen(
         s: String, fd: LocalDate, td: LocalDate -> noteListViewModel.searchNotes(s,fd,td)}
     val onItemClick: (String) -> Unit = { id -> navController.navigate("note/$id")}
     ViewNotes(noteListViewModel.noteList,onDelete,onSearch,navController,onItemClick)
+    LaunchedEffect(Unit) {
+        noteListViewModel.searchNotes(null,null,null)
+    }
+    BackHandler {
+        navController.popBackStack("home", inclusive = false)
+    }
 }
 
 @Composable

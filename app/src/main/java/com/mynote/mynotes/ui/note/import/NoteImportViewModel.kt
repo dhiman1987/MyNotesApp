@@ -49,7 +49,7 @@ class NoteImportViewModel (private val noteRepository: NoteRepository,
                     selectedNotes.add(noteOverview)
                 }
             }
-            Log.v(TAG, "selectedNotes size $selectedNotes")
+            Log.v(TAG, "selectedNotes size ${selectedNotes.size}")
         }
     }
 

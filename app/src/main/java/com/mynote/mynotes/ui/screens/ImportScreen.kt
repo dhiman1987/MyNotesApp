@@ -35,17 +35,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mynote.mynotes.data.NoteOverview
 import com.mynote.mynotes.db.NoteRepository
+import com.mynote.mynotes.encryption.BiometricAuthHelper
+import com.mynote.mynotes.encryption.EncryptionUtils
 import com.mynote.mynotes.file.FileRepository
 import com.mynote.mynotes.ui.note.import.NoteImportViewModel
 import com.mynote.mynotes.ui.note.import.NoteImportViewModelFactory
 import com.mynote.mynotes.ui.screens.common.NoteList
 import com.mynote.mynotes.ui.theme.MyNotesTheme
 
-private val TAG = "ImportNotes"
+private const val TAG = "ImportNotes"
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -55,7 +58,11 @@ fun ImportNoteScreen(noteRepository: NoteRepository,
     val noteImportViewModel: NoteImportViewModel = viewModel(factory = NoteImportViewModelFactory(noteRepository,fileRepository,navController))
     val deleteSelectedNote: (String) -> Unit = { id -> noteImportViewModel.deleteSelectedNote(id)}
     val updateSelectedNotes: (List<Uri>) -> Unit = { filesToImport -> noteImportViewModel.updateSelectedNotes(filesToImport)}
-    val importNotes: () -> Unit = { noteImportViewModel.importNotes()}
+    val encryptCipher = EncryptionUtils.getEncryptCipher()
+    val biometricAuthHelper = BiometricAuthHelper(LocalContext.current as FragmentActivity)
+    { _ -> noteImportViewModel.importNotes() }
+    val importNotes: () -> Unit = { biometricAuthHelper.authenticate(encryptCipher) }
+
     ImportNote(context = LocalContext.current,
         noteImportViewModel.selectedNotes,
         deleteSelectedNote = deleteSelectedNote,
@@ -72,15 +79,9 @@ fun ImportNote(context: Context,
                updateSelectedNotes: (List<Uri>) -> Unit,
                importNotes: () -> Unit
                ){
-
     val pickFileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
-    ){ uris: List<Uri> ->
-        //val biometricAuthHelper = BiometricAuthHelper(context as FragmentActivity) {
-            updateSelectedNotes(uris)
-       // }
-       // biometricAuthHelper.authenticate()
-    }
+    ){ uris: List<Uri> -> updateSelectedNotes(uris) }
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission() )
@@ -121,7 +122,6 @@ fun ImportNote(context: Context,
                     it = it)
             }
         }
-
 
 }
 

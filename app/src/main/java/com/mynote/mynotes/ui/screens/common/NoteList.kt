@@ -66,10 +66,6 @@ fun NoteList(
                     onClick = {
                         Log.v(TAG, "Note ${note.id} clicked")
                         onItemClick(note.id)},
-                    /*onClick = {
-
-                        navController.navigate("note/${note.id}")
-                    },*/
                     onDelete = {
                         Log.v(TAG, "Deleting ${note.id} clicked")
                         onDelete(note.id)
