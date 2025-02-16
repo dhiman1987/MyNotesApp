@@ -206,11 +206,9 @@ fun NoteItemPreview(modifier: Modifier = Modifier){
         NoteOverview("12", "This is a note 2", true,"03 Nov 2024"),
         NoteOverview("13", "This is a note 3", false,"04 Nov 2024"),
         NoteOverview("14", "This is a note 4", true,"05 Nov 2024"),
-     //   NoteOverview("15", "This is a note 5", "06 Nov 2024"),
-     //   NoteOverview("16", "This is a note 6", "07 Nov 2024")
     )
 
-    MyNotesTheme(darkTheme = false) {
+    MyNotesTheme(darkTheme = true) {
 
         val onSearch: (String, LocalDate, LocalDate) -> Unit = {
                 s: String, fd: LocalDate, td: LocalDate -> Log.v("preview","$s $fd $td")}

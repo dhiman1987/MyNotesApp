@@ -46,7 +46,6 @@ import com.mynote.mynotes.ui.theme.MyNotesTheme
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), navController: NavController, modifier: Modifier = Modifier) {
-    val searchText by homeViewModel.searchText.collectAsState()
     Column( modifier = Modifier
         .background(MaterialTheme.colorScheme.surface)
         .fillMaxSize()
@@ -209,3 +208,4 @@ fun HomeListNotesButton(navController: NavController){
             .height(140.dp)
     )
 }
+

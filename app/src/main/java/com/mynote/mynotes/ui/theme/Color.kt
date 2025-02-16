@@ -2,25 +2,16 @@ package com.mynote.mynotes.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-//Green light
-//val Primary = Color(0xFF8dd076)
-//val Secondary= Color(0xFFDFFDD7)
-//val Light= Color(0xFFEEFCE9)
-
-//Green dark
-// val PrimaryDark = Color(0xFF568048)
-// val SecondaryDark= Color(0xFF1B1E19)
-// val Dark= Color(0xFF171A17)
-
 // Space Cadet and Mint cream
+// light
 val Primary = Color(0xFF283044)
 val Secondary= Color(0xFFebf5ee)
 val SecondaryBright = Color(0xFFEAEADC)
 val Light= Color(0xFFEAEAE0)
 
-//Green dark
-val PrimaryDark = Color(0xFF36415D)
-val SecondaryDark= Color(0xFF9CA29E)
-val SecondaryDarker = Color(0xFF2F342F)
-val Dark= Color(0xFF171A17)
+// dark
+val PrimaryDark = Color(0xFD909691)
+val SecondaryDark = Color(0xFF1E2433)
+val SecondaryDarker = Color(0xFF1F2533)
+val Dark = Color(0xFF181D28)
 
