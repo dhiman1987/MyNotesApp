@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mynote.mynotes.ui.screens.common.ConfirmationDialog
+import com.mynote.mynotes.ui.screens.common.MarkdownText
 import com.mynote.mynotes.ui.theme.MyNotesTheme
 
 val NoteViewerScreenTag = "NoteViewerScreen"
@@ -118,7 +119,7 @@ fun ShowViewer(
                     .fillMaxWidth()
                     .padding(5.dp)
             )
-            Text(
+            MarkdownText(
                 text = noteContent, modifier = modifier
                     .padding(5.dp)
                     .fillMaxHeight()
@@ -136,14 +137,23 @@ fun NoteScreenViewerPreview(){
         ShowViewer(
             noteTitle = "This is a note",
             noteContent = """
-                This is a content,
-                This is some more content
-                     This is a content,
-                This is some more content
-                This is a content,
-                This is some more content     
-                This is a content,
-                This is some more content
+                # This is the heading,
+                ## This is the sub heading text
+                This is some normal text content. This is some normal text content. This is some normal text content. This is some normal text content.
+                This is some normal text content. This is some normal text content. This is some normal text content. This is some normal text content.
+                This is some normal text content. This is some normal text content. This is some normal text content. This is some normal text content.
+                
+                - Point one
+                  - Sub point 1
+                  - Sub point 2
+                - Point 2
+                - Pont 3 
+                
+                Ok so this **Is a very important note**
+                
+                Note: *Keep this in mind*
+               
+                Do you __like__ this styling?
                 
                 
             """.trimIndent(),
