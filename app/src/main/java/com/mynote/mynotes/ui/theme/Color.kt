@@ -15,10 +15,12 @@ import androidx.compose.ui.graphics.Color
 // Space Cadet and Mint cream
 val Primary = Color(0xFF283044)
 val Secondary= Color(0xFFebf5ee)
+val SecondaryBright = Color(0xFFEAEADC)
 val Light= Color(0xFFEAEAE0)
 
 //Green dark
 val PrimaryDark = Color(0xFF36415D)
 val SecondaryDark= Color(0xFF9CA29E)
+val SecondaryDarker = Color(0xFF2F342F)
 val Dark= Color(0xFF171A17)
 

@@ -2,6 +2,7 @@ package com.mynote.mynotes.ui.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +57,12 @@ fun ViewNotesScreen(
         s: String, fd: LocalDate, td: LocalDate -> noteListViewModel.searchNotes(s,fd,td)}
     val onItemClick: (String) -> Unit = { id -> navController.navigate("note/$id")}
     ViewNotes(noteListViewModel.noteList,onDelete,onSearch,navController,onItemClick)
+    LaunchedEffect(Unit) {
+        noteListViewModel.searchNotes(null,null,null)
+    }
+    BackHandler {
+        navController.popBackStack("home", inclusive = false)
+    }
 }
 
 @Composable
@@ -194,10 +202,10 @@ fun ViewNotesBottomBar(navController: NavController){
 fun NoteItemPreview(modifier: Modifier = Modifier){
 
     val noteList = listOf(
-        NoteOverview("11", "This is a note 1", "02 Nov 2024"),
-        NoteOverview("12", "This is a note 2", "03 Nov 2024"),
-        NoteOverview("13", "This is a note 3", "04 Nov 2024"),
-        NoteOverview("14", "This is a note 4", "05 Nov 2024"),
+        NoteOverview("11", "This is a note 1", true,"02 Nov 2024"),
+        NoteOverview("12", "This is a note 2", true,"03 Nov 2024"),
+        NoteOverview("13", "This is a note 3", false,"04 Nov 2024"),
+        NoteOverview("14", "This is a note 4", true,"05 Nov 2024"),
      //   NoteOverview("15", "This is a note 5", "06 Nov 2024"),
      //   NoteOverview("16", "This is a note 6", "07 Nov 2024")
     )

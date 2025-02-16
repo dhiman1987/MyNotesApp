@@ -20,6 +20,8 @@ class NoteEditorViewModel(noteId: String, noteRepository: NoteRepository) : View
     private var noteModel: NoteModel = NoteModel("",noteRepository)
     private val _mode = MutableStateFlow("view")
     val mode: StateFlow<String> = _mode
+    private val _strongEncryption = MutableStateFlow(noteModel.get().strongEncryption)
+    val strongEncryption: StateFlow<Boolean> = _strongEncryption
 
     private val _noteContent = MutableStateFlow(noteModel.get().content)
     val noteContent: StateFlow<String> = _noteContent
@@ -39,13 +41,14 @@ class NoteEditorViewModel(noteId: String, noteRepository: NoteRepository) : View
             Log.v(TAG, "fetched note with $noteId. ${noteModel.get().title} ${noteModel.get().content}")
             setNoteTitle(noteModel.get().title)
             setNoteContent(noteModel.get().content)
+            setStrongEncryption(noteModel.get().strongEncryption)
             noteUpdatedOn = noteModel.get().updatedOn.format(formatter)
         }
     }
 
     fun save() {
         viewModelScope.launch(Dispatchers.IO) {
-            val note = noteModel.save(title = noteTitle.value, content = noteContent.value)
+            val note = noteModel.save(title = noteTitle.value, content = noteContent.value, strongEncryption = true)
             noteUpdatedOn = note.updatedOn.format(formatter)
         }
     }
@@ -53,4 +56,5 @@ class NoteEditorViewModel(noteId: String, noteRepository: NoteRepository) : View
     fun setMode(newMode: String) { viewModelScope.launch { _mode.value = newMode } }
     fun setNoteContent(newNoteContent: String) { viewModelScope.launch { _noteContent.value = newNoteContent } }
     fun setNoteTitle(newNoteTitle: String) { viewModelScope.launch { _noteTitle.value = newNoteTitle } }
+    fun setStrongEncryption(newEncryption: Boolean) { viewModelScope.launch { _strongEncryption.value = newEncryption } }
 }

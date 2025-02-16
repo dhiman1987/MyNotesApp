@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mynote.mynotes.db.MyNotesDatabase
 import com.mynote.mynotes.db.NoteRepositoryImpl
 import com.mynote.mynotes.encryption.EncryptionUtils
+import com.mynote.mynotes.file.FileRepository
 import com.mynote.mynotes.ui.note.home.HomeViewModel
 import com.mynote.mynotes.ui.note.list.NoteListViewModel
 import com.mynote.mynotes.ui.note.list.NoteListViewModelFactory
@@ -31,6 +32,7 @@ class MainActivity : FragmentActivity() {
 
     private val database by lazy { MyNotesDatabase.getDatabase(applicationContext) }
     private val noteRepository by lazy { NoteRepositoryImpl(database.notesDao()) }
+    private val fileRepository by lazy {FileRepository(applicationContext)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,7 @@ class MainActivity : FragmentActivity() {
                 ) {
                     NavHost(navController, startDestination = "home") {
                         composable("home") { HomeScreen(HomeViewModel(), navController) }
-                        composable("import") { ImportNoteScreen(navController) }
+                        composable("import") { ImportNoteScreen(noteRepository,fileRepository, navController) }
                         composable("list/{searchText}"){backStackEntry ->
                             val searchText = backStackEntry.arguments?.getString("searchText")
                             noteListViewModel.searchNotes(searchText,null,null)

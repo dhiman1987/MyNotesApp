@@ -20,7 +20,7 @@ class NoteListViewModel (private val noteRepository: NoteRepository) : ViewModel
     private val TAG = "NoteListViewModel"
     private var searchText = ""
     private var fromDate:Long = LocalDateTime.now().minusMonths(1L).toEpochSecond(ZoneOffset.UTC)
-    private var toDate:Long = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+    private var toDate:Long = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC)
     private var notes:List<NoteOverview> = emptyList()
     var noteList by mutableStateOf(notes)
 
