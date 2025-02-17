@@ -20,15 +20,16 @@ object EncryptionUtils {
 
     fun initialize() {
         keyStore = KeyStore.getInstance(ANDROID_KEY_STORE).apply { load(null) }
+        val isStrongBoxAvailable = keyStore.getProvider().name.contains("StrongBox")
         if (!keyStore.containsAlias(KEY_ALIAS)) {
-            generateKey()
+            generateKey(isStrongBoxAvailable)
             Log.v(TAG, "new key generated")
         } else {
             Log.v(TAG, "existing key found")
         }
 
         if (!keyStore.containsAlias(IMPORT_KEY_ALIAS)) {
-            generateImportKey()
+            generateImportKey(isStrongBoxAvailable)
             Log.v(TAG, "new import key generated")
         } else {
             Log.v(TAG, "existing import key found")
@@ -69,27 +70,27 @@ object EncryptionUtils {
         return keyStore.getKey(IMPORT_KEY_ALIAS, null) as SecretKey
     }
 
-    private fun generateKey() {
+    private fun generateKey(isStrongBoxEnabled:Boolean) {
         val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
         keyGenerator.init(
             KeyGenParameterSpec.Builder(KEY_ALIAS,
                 KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setIsStrongBoxBacked(true)
+                .setIsStrongBoxBacked(isStrongBoxEnabled)
                 .setUserAuthenticationRequired(true)
                 .build())
         keyGenerator.generateKey()
     }
 
-    private fun generateImportKey() {
+    private fun generateImportKey(isStrongBoxEnabled:Boolean) {
         val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
         keyGenerator.init(
             KeyGenParameterSpec.Builder(IMPORT_KEY_ALIAS,
                 KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setIsStrongBoxBacked(true)
+                .setIsStrongBoxBacked(isStrongBoxEnabled)
                 .setUserAuthenticationRequired(false)
                 .build())
         keyGenerator.generateKey()
