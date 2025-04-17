@@ -40,11 +40,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mynote.mynotes.TAG
 import com.mynote.mynotes.data.NoteOverview
+import com.mynote.mynotes.data.Tag
 import com.mynote.mynotes.ui.note.list.NoteListViewModel
 import com.mynote.mynotes.ui.screens.common.NoteList
 import com.mynote.mynotes.ui.theme.MyNotesTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.ArrayList
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -170,9 +172,6 @@ OutlinedTextField( value = inputText,
     modifier = Modifier.width(132.dp))
 }
 
-
-
-
 @Composable
 fun ViewNotesBottomBar(navController: NavController){
     Button(
@@ -201,14 +200,19 @@ fun ViewNotesBottomBar(navController: NavController){
 @Composable
 fun NoteItemPreview(modifier: Modifier = Modifier){
 
+    val tags = ArrayList<Tag>(3)
+    tags.add(Tag(1L,"Journal"))
+    tags.add(Tag(2L,"Office"))
+    tags.add(Tag(3L,"Confidential"))
+
     val noteList = listOf(
-        NoteOverview("11", "This is a note 1", true,"02 Nov 2024"),
-        NoteOverview("12", "This is a note 2", true,"03 Nov 2024"),
-        NoteOverview("13", "This is a note 3", false,"04 Nov 2024"),
-        NoteOverview("14", "This is a note 4", true,"05 Nov 2024"),
+        NoteOverview("11", "This is a note 1", true,null,"02 Nov 2024"),
+        NoteOverview("12", "This is a note 2", true,tags,"03 Nov 2024"),
+        NoteOverview("13", "This is a note 3", false,tags,"04 Nov 2024"),
+        NoteOverview("14", "This is a note 4", true,null,"05 Nov 2024"),
     )
 
-    MyNotesTheme(darkTheme = true) {
+    MyNotesTheme(darkTheme = false) {
 
         val onSearch: (String, LocalDate, LocalDate) -> Unit = {
                 s: String, fd: LocalDate, td: LocalDate -> Log.v("preview","$s $fd $td")}

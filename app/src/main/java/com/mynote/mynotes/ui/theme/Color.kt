@@ -12,6 +12,6 @@ val Light= Color(0xFFEAEAE0)
 // dark
 val PrimaryDark = Color(0xFD909691)
 val SecondaryDark = Color(0xFF1E2433)
-val SecondaryDarker = Color(0xFF1F2533)
+val SecondaryDarker = Color(0xFF1F2833)
 val Dark = Color(0xFF181D28)
 

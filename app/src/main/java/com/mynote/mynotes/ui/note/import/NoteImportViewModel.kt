@@ -45,6 +45,7 @@ class NoteImportViewModel (private val noteRepository: NoteRepository,
                     val noteOverview = NoteOverview(id= noteId,
                         title=noteTitle,
                         strongEncryption = false,
+                        tags = null,
                         updatedOn = LocalDateTime.now().format(formatter))
                     selectedNotes.add(noteOverview)
                 }
@@ -66,7 +67,7 @@ class NoteImportViewModel (private val noteRepository: NoteRepository,
                 val combinedData  = "$iv|$encryptedData"
                 Log.v(TAG, "encrypted data $combinedData[${combinedData.length}]")
                 val importedNote = NoteModel("",noteRepository)
-                importedNote.save(note.title, combinedData, note.strongEncryption)
+                importedNote.save(note.title, combinedData, note.strongEncryption,null)
             }
         }
         navController.navigate("list/")

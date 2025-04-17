@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mynote.mynotes.data.Note
 import com.mynote.mynotes.data.NoteOverview
+import com.mynote.mynotes.data.Tag
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -26,10 +27,11 @@ fun NoteEntity.toNote(): Note {
         title=this.title,
         content=this.content,
         strongEncryption=this.strongEncryption,
+        tags = null,
         updatedOn = updatedOnDateTime)
 }
 
-fun NoteEntity.toNoteOverview(): NoteOverview {
+fun NoteEntity.toNoteOverview(tags: List<Tag>?): NoteOverview {
     val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
     val updatedOnDateTime = LocalDateTime
         .ofEpochSecond(this.updatedOn,0, ZoneOffset.UTC)
@@ -37,5 +39,6 @@ fun NoteEntity.toNoteOverview(): NoteOverview {
         id=this.id,
         title=this.title,
         strongEncryption=this.strongEncryption,
+        tags = tags,
         updatedOn = updatedOnDateTime.format(formatter))
 }

@@ -7,6 +7,7 @@ import java.time.ZoneOffset
 data class Note(val id: String,
                 val title: String,
                 val content: String,
+                var tags: List<Tag>?,
                 val strongEncryption: Boolean,
                 val updatedOn: LocalDateTime)
 

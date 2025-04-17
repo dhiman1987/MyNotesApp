@@ -2,6 +2,8 @@ package com.mynote.mynotes.db
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 
@@ -10,6 +12,12 @@ interface NoteDao {
 
     @Upsert
     fun save(note: NoteEntity)
+
+    @Upsert
+    fun save(tag: TagEntity): Long
+
+    @Delete
+    fun delete(tag: TagEntity)
 
     @Delete
     fun delete(note: NoteEntity)
@@ -33,4 +41,31 @@ interface NoteDao {
             "WHERE UPDATEDON BETWEEN :fromDate AND :toDate " +
             "ORDER BY updatedOn DESC")
     fun searchNotes(fromDate: Long, toDate: Long): List<NoteEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertNoteTagCrossRef(noteTagCrossRef: NoteTagCrossRef)
+
+   // @Insert(onConflict = OnConflictStrategy.REPLACE)
+   // fun insertNoteTagCrossRef(noteTagMappings: List<NoteTagCrossRef>)
+
+    @Query("DELETE FROM NoteTagCrossRef WHERE noteId = :noteId AND tagId IN (:tagIds)")
+    fun deleteNoteTagCrossRef(noteId: String, tagIds: List<Long>)
+
+    @Query("DELETE FROM NoteTagCrossRef WHERE noteId = :noteId")
+    fun deleteNoteTagCrossRef(noteId: String)
+
+    @Query("SELECT * FROM tags WHERE name LIKE UPPER(:query) ORDER BY name")
+    fun searchTags(query: String): List<TagEntity>
+
+    @Query("SELECT * FROM notes INNER JOIN NoteTagCrossRef ON " +
+            "notes.id = NoteTagCrossRef.noteId WHERE NoteTagCrossRef.tagId = :tagId")
+    fun getNotesByTag(tagId: Long): List<NoteEntity>
+
+    @Query("SELECT * from tags WHERE name = :name")
+    fun getTag(name: String): TagEntity?
+
+    @Query("SELECT * FROM tags INNER JOIN NoteTagCrossRef ON " +
+            "tags.id = NoteTagCrossRef.tagId WHERE NoteTagCrossRef.noteId = :noteId")
+    fun getTagsForNote(noteId: String): List<TagEntity>?
+
 }

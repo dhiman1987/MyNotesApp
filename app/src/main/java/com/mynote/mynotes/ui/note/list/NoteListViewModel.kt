@@ -7,6 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mynote.mynotes.data.NoteOverview
+import com.mynote.mynotes.data.Tag
+import com.mynote.mynotes.db.NoteEntity
 import com.mynote.mynotes.db.NoteRepository
 import com.mynote.mynotes.db.toNoteOverview
 import kotlinx.coroutines.Dispatchers
@@ -56,15 +58,21 @@ class NoteListViewModel (private val noteRepository: NoteRepository) : ViewModel
         if(searchText.isNotBlank()) {
             notes = noteRepository
                 .searchNotes("%${searchText}%",this.fromDate, this.toDate)
-                .map{n -> n.toNoteOverview()}
+                .map{ n -> toNoteOverviews(n) }
         } else {
             notes = noteRepository
                 .searchNotes(this.fromDate, this.toDate)
-                .map{n -> n.toNoteOverview()}
+                .map{n -> toNoteOverviews(n)}
         }
 
         Log.v(TAG, "fetched ${notes.size} notes");
         noteList = notes
         Log.v(TAG, "fetched note list ${noteList.size} notes");
+    }
+
+    private fun toNoteOverviews(note : NoteEntity):NoteOverview{
+        val tags = noteRepository.getTagsForNote(noteId = note.id)
+            ?.map { t -> Tag(t.id,t.name) }
+        return note.toNoteOverview(tags)
     }
 }

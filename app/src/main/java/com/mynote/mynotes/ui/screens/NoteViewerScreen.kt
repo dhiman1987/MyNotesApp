@@ -1,8 +1,6 @@
 package com.mynote.mynotes.ui.screens
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,10 +10,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,8 +31,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mynote.mynotes.data.Tag
 import com.mynote.mynotes.ui.screens.common.ConfirmationDialog
 import com.mynote.mynotes.ui.screens.common.MarkdownText
+import com.mynote.mynotes.ui.screens.common.ShowTags
 import com.mynote.mynotes.ui.theme.MyNotesTheme
 
 val NoteViewerScreenTag = "NoteViewerScreen"
@@ -48,6 +46,7 @@ fun ShowViewer(
     noteTitle: String,
     noteContent: String,
     noteUpdatedOn: String,
+    tags: List<Tag>,
     onEdit: () -> Unit,
     onShare: () -> Unit,
     modifier: Modifier = Modifier
@@ -117,8 +116,12 @@ fun ShowViewer(
                 color = Color.Gray,
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(5.dp)
+                    .padding(vertical = 12.dp, horizontal = 5.dp)
             )
+            ShowTags(tags,
+                deleteEnabled = false,
+                backgroundColor = Color.Transparent,
+                onDelete = {})
             MarkdownText(
                 text = noteContent, modifier = modifier
                     .padding(5.dp)
@@ -130,9 +133,15 @@ fun ShowViewer(
 
 }
 
+
+
 @Composable
 @Preview
 fun NoteScreenViewerPreview(){
+    val tags = ArrayList<Tag>(3)
+    tags.add(Tag(1L,"Journal"))
+    tags.add(Tag(2L,"Office"))
+    tags.add(Tag(3L,"Confidential"))
     MyNotesTheme(darkTheme = true) {
         ShowViewer(
             noteTitle = "This is a note",
@@ -159,7 +168,8 @@ fun NoteScreenViewerPreview(){
             """.trimIndent(),
             noteUpdatedOn = "12th Nov 2025",
             onEdit = {},
-            onShare = {}
+            onShare = {},
+            tags = tags
         )
     }
 }

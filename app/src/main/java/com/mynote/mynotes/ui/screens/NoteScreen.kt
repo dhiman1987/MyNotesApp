@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mynote.mynotes.data.Tag
 import com.mynote.mynotes.db.NoteRepository
 import com.mynote.mynotes.encryption.BiometricAuthHelper
 import com.mynote.mynotes.encryption.EncryptionUtils
@@ -31,6 +32,7 @@ fun NoteScreen (noteId:String,
                 noteEditorViewModel.noteTitle.collectAsState().value,
                 noteEditorViewModel.noteContent.collectAsState().value,
                 noteEditorViewModel.noteUpdatedOn,
+                tags = noteEditorViewModel.tags,
                 onEdit = {
                     Log.v(NOTE_SCREEN_TAG, "`Edit` button clicked")
                     noteEditorViewModel.setMode("edit")

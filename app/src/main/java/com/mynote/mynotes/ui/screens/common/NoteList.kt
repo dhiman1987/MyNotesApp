@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalProvider
 import androidx.compose.ui.text.font.FontStyle
@@ -38,7 +42,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mynote.mynotes.TAG
 import com.mynote.mynotes.data.NoteOverview
+import com.mynote.mynotes.data.Tag
 import com.mynote.mynotes.ui.theme.MyNotesTheme
+import java.util.ArrayList
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -129,24 +135,37 @@ fun NoteItem(note: NoteOverview, onClick: () -> Unit, onDelete: () -> Unit) {
                 }
             }
         }
+        ShowTags(
+            note.tags, backgroundColor = backgroundColor,
+            deleteEnabled = false,
+            onDelete = {}
+        )
     }
 
 }
 
-@Preview(showBackground = true)
+
+
+
+@Preview(showBackground = false)
 @Composable
 fun NoteListPreview(){
 
+    val tags = ArrayList<Tag>(3)
+    tags.add(Tag(1L,"Journal"))
+    tags.add(Tag(2L,"Office"))
+    tags.add(Tag(3L,"Confidential"))
+
     val noteList = listOf(
-        NoteOverview("11", "This is a note 1", true,"02 Nov 2024"),
-        NoteOverview("12", "This is a note 2", true,"03 Nov 2024"),
-        NoteOverview("13", "This is a note 3", false,"04 Nov 2024"),
-        NoteOverview("14", "This is a note 4", true,"05 Nov 2024"),
-        NoteOverview("15", "This is a note 5", true,"06 Nov 2024"),
-        NoteOverview("16", "This is a note 6", false,"07 Nov 2024")
+        NoteOverview("11", "This is a note 1", true,tags,"02 Nov 2024"),
+        NoteOverview("12", "This is a note 2", true,null,"03 Nov 2024"),
+        NoteOverview("13", "This is a note 3", false,null,"04 Nov 2024"),
+        NoteOverview("14", "This is a note 4", true,tags,"05 Nov 2024"),
+        NoteOverview("15", "This is a note 5", true,null,"06 Nov 2024"),
+        NoteOverview("16", "This is a note 6", false,tags,"07 Nov 2024")
     )
     val it = PaddingValues()
-    MyNotesTheme(darkTheme = true) {
+    MyNotesTheme(darkTheme = false) {
         NoteList(
             noteList = noteList,
             onDelete = { },

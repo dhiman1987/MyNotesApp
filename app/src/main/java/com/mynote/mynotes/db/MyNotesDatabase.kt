@@ -8,7 +8,8 @@ import androidx.room.RoomDatabase
 /**
  * Database class with a singleton Instance object.
  */
-@Database(entities = [NoteEntity::class], version = 1, exportSchema = false)
+@Database(entities = [NoteEntity::class, TagEntity::class, NoteTagCrossRef::class],
+    version = 1, exportSchema = false)
 abstract class MyNotesDatabase : RoomDatabase() {
 
     abstract fun notesDao(): NoteDao
