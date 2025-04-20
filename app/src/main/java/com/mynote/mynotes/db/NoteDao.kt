@@ -31,22 +31,30 @@ interface NoteDao {
     @Query("SELECT * from notes WHERE UPPER(title) LIKE UPPER(:searchText) ORDER BY updatedOn DESC")
     fun getAllNotes(searchText: String): List<NoteEntity>
 
-    @Query("SELECT * from notes " +
-            "WHERE UPPER(title) LIKE UPPER(:searchText) " +
-            "AND UPDATEDON BETWEEN :fromDate AND :toDate " +
-            "ORDER BY updatedOn DESC")
+    @Query("""
+        SELECT Notes.id, Notes.title, Notes.content, Notes.updatedOn, Notes.strongEncryption
+        FROM Notes
+        LEFT JOIN NoteTagCrossRef ON Notes.id = NoteTagCrossRef.noteId
+        LEFT JOIN Tags ON NoteTagCrossRef.tagId = Tags.id
+        WHERE 
+        (
+            UPPER(Notes.title) LIKE UPPER(:searchText)
+            OR UPPER(Tags.name) LIKE UPPER(:searchText)
+        )
+        AND Notes.updatedOn BETWEEN :fromDate AND :toDate
+        ORDER BY Notes.updatedOn DESC;
+    """)
     fun searchNotes(searchText: String, fromDate: Long, toDate: Long): List<NoteEntity>
 
-    @Query("SELECT * from notes " +
-            "WHERE UPDATEDON BETWEEN :fromDate AND :toDate " +
-            "ORDER BY updatedOn DESC")
+    @Query("""
+        SELECT * from notes
+        WHERE UPDATEDON BETWEEN :fromDate AND :toDate
+        ORDER BY updatedOn DESC
+    """)
     fun searchNotes(fromDate: Long, toDate: Long): List<NoteEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNoteTagCrossRef(noteTagCrossRef: NoteTagCrossRef)
-
-   // @Insert(onConflict = OnConflictStrategy.REPLACE)
-   // fun insertNoteTagCrossRef(noteTagMappings: List<NoteTagCrossRef>)
 
     @Query("DELETE FROM NoteTagCrossRef WHERE noteId = :noteId AND tagId IN (:tagIds)")
     fun deleteNoteTagCrossRef(noteId: String, tagIds: List<Long>)
@@ -57,15 +65,21 @@ interface NoteDao {
     @Query("SELECT * FROM tags WHERE name LIKE UPPER(:query) ORDER BY name")
     fun searchTags(query: String): List<TagEntity>
 
-    @Query("SELECT * FROM notes INNER JOIN NoteTagCrossRef ON " +
-            "notes.id = NoteTagCrossRef.noteId WHERE NoteTagCrossRef.tagId = :tagId")
+    @Query("""
+        SELECT * FROM notes INNER JOIN NoteTagCrossRef ON
+        notes.id = NoteTagCrossRef.noteId 
+        WHERE NoteTagCrossRef.tagId = :tagId
+    """)
     fun getNotesByTag(tagId: Long): List<NoteEntity>
 
     @Query("SELECT * from tags WHERE name = :name")
     fun getTag(name: String): TagEntity?
 
-    @Query("SELECT * FROM tags INNER JOIN NoteTagCrossRef ON " +
-            "tags.id = NoteTagCrossRef.tagId WHERE NoteTagCrossRef.noteId = :noteId")
+    @Query("""
+            SELECT * FROM tags INNER JOIN NoteTagCrossRef ON
+            tags.id = NoteTagCrossRef.tagId 
+            WHERE NoteTagCrossRef.noteId = :noteId
+    """)
     fun getTagsForNote(noteId: String): List<TagEntity>?
 
 }

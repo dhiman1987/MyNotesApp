@@ -101,7 +101,7 @@ fun ShowTagsSection(noteEditorViewModel:NoteEditorViewModel){
             OutlinedTextField(
                 value = tagInput,
                 onValueChange = { tagInput = it },
-                label = { Text("New Tag") },
+                label = { Text("New Tag - not encrypted") },
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(8.dp))

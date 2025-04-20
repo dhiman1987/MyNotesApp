@@ -94,7 +94,7 @@ fun ViewNotesTopBar(onSearch: (String, LocalDate, LocalDate) -> Unit){
         OutlinedTextField(
             value = searchText,
             onValueChange = { searchText = it },
-            label = { Text("Search by note title") },
+            label = { Text("Search by note title or tag name") },
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
                 unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary,

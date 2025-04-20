@@ -2,9 +2,11 @@ package com.mynote.mynotes.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -59,7 +61,20 @@ fun ShowViewer(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
-                title = { Text(text = noteTitle) },
+                title = {
+                    Column(
+                        modifier = Modifier.padding(0.dp)
+                    ) {
+
+                    Text(text = noteTitle)
+                    Text(
+                        text = noteUpdatedOn,
+                        fontSize = 12.sp,
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp, horizontal = 5.dp)
+                    )}
+                        },
                 actions = {
                     IconButton(onClick = {
                             showDialog = true
@@ -110,14 +125,7 @@ fun ShowViewer(
                     top = it.calculateTopPadding())
                 .fillMaxSize()
         ) {
-            Text(
-                text = noteUpdatedOn,
-                fontSize = 12.sp,
-                color = Color.Gray,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 5.dp)
-            )
+            Spacer(modifier = Modifier.height(10.dp))
             ShowTags(tags,
                 deleteEnabled = false,
                 backgroundColor = Color.Transparent,
@@ -142,7 +150,7 @@ fun NoteScreenViewerPreview(){
     tags.add(Tag(1L,"Journal"))
     tags.add(Tag(2L,"Office"))
     tags.add(Tag(3L,"Confidential"))
-    MyNotesTheme(darkTheme = true) {
+    MyNotesTheme(darkTheme = false) {
         ShowViewer(
             noteTitle = "This is a note",
             noteContent = """
