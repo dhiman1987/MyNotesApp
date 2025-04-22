@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -18,6 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +42,13 @@ fun ShowEditor(
     onSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
+    val textValue by noteEditorViewModel.noteContent.collectAsState()
+    LaunchedEffect(textValue) {
+        scrollState.scrollTo(scrollState.maxValue)
+    }
     Scaffold(
+        modifier = Modifier.imePadding(),
         topBar = {},
         bottomBar = {
             Button(
@@ -61,6 +69,7 @@ fun ShowEditor(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
+
         ) {
             OutlinedTextField(
                 value = noteEditorViewModel.noteTitle.collectAsState().value,
@@ -78,8 +87,9 @@ fun ShowEditor(
                 label = { Text("Note Content - encrypted ") },
                 modifier = modifier
                     .padding(5.dp)
+                    .weight(1f)
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
             )
         }
     }
