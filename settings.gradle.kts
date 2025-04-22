@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MyNotes"
+rootProject.name = "DotnDash"
 include(":app")

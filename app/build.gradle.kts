@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mynote.mynotes"
+    namespace = "com.dotndash.mynotes"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.mynote.mynotes"
+        applicationId = "com.dotndash.mynotes"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -23,7 +23,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
