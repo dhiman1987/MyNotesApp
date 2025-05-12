@@ -1,5 +1,6 @@
 package com.dotndash.mynotes.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,8 +45,18 @@ fun ShowEditor(
 ) {
     val scrollState = rememberScrollState()
     val textValue by noteEditorViewModel.noteContent.collectAsState()
+    var isUserScrollingUp by remember { mutableStateOf(false) }
+
+    LaunchedEffect(scrollState.value) {
+        isUserScrollingUp = scrollState.value < scrollState.maxValue - 50 // Adjust threshold as needed
+    }
     LaunchedEffect(textValue) {
-        scrollState.scrollTo(scrollState.maxValue)
+
+        if(!isUserScrollingUp){
+            Log.v("ShowEditor ","scrolling back")
+            scrollState.scrollTo(scrollState.maxValue)
+        }
+
     }
     Scaffold(
         modifier = Modifier.imePadding(),
